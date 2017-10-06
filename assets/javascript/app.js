@@ -2,23 +2,16 @@ $(document).ready(function() {
 
 var nflTeams = ["Vikings", "Lions", "Packers", "Bears"];
 
-var queryURL = "http://api.giphy.com/v1/gifs/search?q=nfl+teams&api_key=YOUR_API_KEY&limit=5";
+var API_Key = "mZy8a9OzcJUm6UDmN9T2MjZVPF5Kn6hH";
 
-$.ajax({
-    url: queryURL,
-    method: "GET"
-}).done(function(response) {
-    console.log(response);
-});
-
-/*function displayGifs() { 
+function displayGifs() { 
     
      var team = $(this).attr("data-name");
-     var queryURL = "https://api.giphy.com/v1/gifs/search?q=nfl+teams" + team + "&api_key=xYh2yLmPCcgZjkWBJhHbGpqcMaSPuMhO&limit=10";
+     var queryURL = "https://api.giphy.com/v1/gifs/search?limit=10&q=nflteams" + team + "&api_key=API_Key";
  
      $.ajax({
          url: queryURL,
-         method: "GET"
+         method: 'GET'
      }).done( function(response) {
          
          console.log(response);
@@ -65,7 +58,8 @@ $.ajax({
    
      });
  
- }*/
+ }
+
 
 function renderButtons() { 
     
@@ -77,7 +71,7 @@ function renderButtons() {
 
         buttons.addClass("btn btn-primary teams");
         buttons.attr("data-name", nflTeams[i]);
-        buttons.text(nflTeams[i]);
+        buttons.html(nflTeams[i]);
 
         $("#buttons-view").append(buttons);
 
@@ -92,7 +86,7 @@ $("#add-button").on("click", function (event){
 
     var team = $("#user-input").val().trim();
 
-    nflTeams.push(teams);
+    nflTeams.push(team);
 
     renderButtons();
     
