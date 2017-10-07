@@ -1,65 +1,8 @@
+var nflTeams = ["Minnesota Vikings", "Detroit Lions", "Green Bay Packers", "Chicago Bears"];
+
+//var API_Key = "mZy8a9OzcJUm6UDmN9T2MjZVPF5Kn6hH";
+
 $(document).ready(function() {
-
-var nflTeams = ["Vikings", "Lions", "Packers", "Bears"];
-
-var API_Key = "mZy8a9OzcJUm6UDmN9T2MjZVPF5Kn6hH";
-
-function displayGifs() { 
-    
-     var team = $(this).attr("data-name");
-     var queryURL = "https://api.giphy.com/v1/gifs/search?limit=10&q=nflteams" + team + "&api_key=API_Key";
- 
-     $.ajax({
-         url: queryURL,
-         method: 'GET'
-     }).done( function(response) {
-         
-         console.log(response);
- 
-         var results = response.data;
- 
-         for (var i = 0; i < results.length; i++) {
- 
-             var gifDiv = $("#gif-view");
- 
-             var p = $("<p>").text("Rating: " + results[i].rating);
- 
-             var teamImg = $("<img class='teamImg'>");
- 
-             teamImg.attr("src", results[i].images.fixed_height.url);
-             teamImg.attr("data-still", results[i].images.fixed_height_still.url);
-             teamImg.attr("data-animate", results[i].images.fixed_height.url);
-             teamImg.attr("data-state", "still");
- 
-             gifDiv.append(p);
- 
-             gifDiv.append(teamImg);
- 
-             $("#gif-view").prepend(gifDiv);
-         }
-         
-         $(".teamImg").on("click", function () {
-             
-             var state = $(this).attr("data-state");
-             console.log(this);
- 
-             if (state == "still") {
-                 
-                 $(this).attr("src", $(this).data("animate"));
- 
-                 $(this).attr("data-state", "animate");
-             
-            } else {
-                $(this).attr("scr", $(this).data("still"));
-
-                $(this).attr("data-state", "still");
-            }
-         });
-   
-     });
- 
- }
-
 
 function renderButtons() { 
     
@@ -69,9 +12,9 @@ function renderButtons() {
 
         var buttons = $("<button>");
 
-        buttons.addClass("btn btn-primary teams");
+        buttons.addClass("btn btn-primary teamButton");
         buttons.attr("data-name", nflTeams[i]);
-        buttons.html(nflTeams[i]);
+        buttons.text(nflTeams[i]);
 
         $("#buttons-view").append(buttons);
 
@@ -79,8 +22,7 @@ function renderButtons() {
 
 }
 
-
-$("#add-button").on("click", function (event){
+$("#add-button").on("click", function(event) {
 
     event.preventDefault();
 
@@ -88,14 +30,82 @@ $("#add-button").on("click", function (event){
 
     nflTeams.push(team);
 
+    $("#user-input").val("");
+
     renderButtons();
     
 });
 
+function displayGifs() { 
+    
+     var team = $(this).attr("data-name");
 
+     var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + team + "&limit=10&api_key=mZy8a9OzcJUm6UDmN9T2MjZVPF5Kn6hH";
+ 
+     $.ajax({
+         url: queryURL,
+         method: 'GET'
+     }).done( function(response) {
+         
+        $("#gif-view").empty();
 
-$(document).on("click", ".teams", displayGifs);
+         console.log(response);
+ 
+         var results = response.data;
+ 
+         for (var i = 0; i < results.length; i++) {
+ 
+             var newDiv = $("<div>");
+
+             newDiv.addClass("teamGif");
+ 
+             var newRating = $("<p class='rating'>").text("Rating: " + results[i].rating);
+
+             var teamImg = $("<img>");
+ 
+             teamImg.attr("src", results[i].images.fixed_height_still.url);
+             teamImg.attr("data-still", results[i].images.fixed_height_still.url);
+             teamImg.attr("data-animate", results[i].images.fixed_height.url);
+             teamImg.attr("data-state", "still");
+            
+             newDiv.append(teamImg);
+
+             newDiv.append(newRating);
+ 
+             $("#gif-view").append(newDiv);
+
+         }
+
+    });
+
+  }
+
+function animateGif() { 
+             
+    var state = $(this).find("img").attr("data-state");
+ 
+    if (state === "still") {
+                 
+         $(this).find("img").attr("src", $(this).find("img").attr("data-animate"));
+ 
+        $(this).find("img").attr("data-state", "animate");
+             
+    } else {
+        
+        $(this).find("img").attr("scr", $(this).find("img").attr("data-still"));
+
+        $(this).find("img").attr("data-state", "still");
+            
+    }
+
+}       
 
 renderButtons();
+
+
+
+$(document).on("click", ".teamGif", animateGif);
+
+$(document).on("click", ".teamButton", displayGifs);
 
 });
