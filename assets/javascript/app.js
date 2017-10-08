@@ -83,18 +83,20 @@ function displayGifs() {
 function animateGif() { 
              
     var state = $(this).find("img").attr("data-state");
- 
+    
+    var image = $(this).find("img");
+
     if (state === "still") {
                  
-         $(this).find("img").attr("src", $(this).find("img").attr("data-animate"));
+         image.attr("src", $(this).find("img").attr("data-animate"));
  
-        $(this).find("img").attr("data-state", "animate");
+        image.attr("data-state", "animate");
              
     } else {
         
-        $(this).find("img").attr("scr", $(this).find("img").attr("data-still"));
+        image.attr("src", $(this).find("img").attr("data-still"));
 
-        $(this).find("img").attr("data-state", "still");
+        image.attr("data-state", "still");
             
     }
 
